@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radar Estratégico 4.0 | Neural Agent</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0', 800: '#1e293b', 900: '#0f172a' },
+                        aero: { primary: '#0284c7', dark: '#0c4a6e', surface: '#f0f9ff' },
+                        status: { error: '#ef4444', warning: '#f59e0b', success: '#10b981' }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root { scroll-behavior: smooth; }
+        body { background-color: #f8fafc; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .chart-wrapper { position: relative; width: 100%; height: 350px; min-height: 350px; }
+        .glass-header { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(25px); border-bottom: 1px solid rgba(226, 232, 240, 0.8); }
+        .premium-card { transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid #e2e8f0; background: #ffffff; position: relative; }
+        .premium-card:hover { transform: translateY(-12px); box-shadow: 0 35px 70px -15px rgba(15, 23, 42, 0.12); border-color: #0284c7; }
+        .sync-rotate { animation: rotate 2s linear infinite; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        #newsModal .modal-content { max-height: 92vh; width: 95vw; max-width: 1250px; border-radius: 4rem; }
+        .reject-btn { opacity: 0; transform: translateX(10px); transition: all 0.3s ease; }
+        .premium-card:hover .reject-btn { opacity: 1; transform: translateX(0); }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 20px; }
+    </style>
+</head>
+<body class="antialiased text-slate-900">
+
+    <header class="glass-header sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 h-24 flex justify-between items-center">
+            <div class="flex items-center gap-6">
+                <div class="w-14 h-14 bg-slate-900 rounded-[1.5rem] flex items-center justify-center shadow-2xl">
+                    <span class="text-3xl">🧠</span>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black tracking-tighter uppercase leading-none text-slate-900">Neural Radar</h1>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="bg-status-success text-white text-[8px] font-black px-2 py-0.5 rounded tracking-widest uppercase">Cloud Active</span>
+                        <p class="text-[9px] font-mono text-slate-400 tracking-[0.2em] uppercase text-left">Sincronização Agente IA</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <button id="syncBtn" class="flex items-center gap-3 bg-slate-900 text-white px-6 py-3.5 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-aero-primary transition-all shadow-2xl group disabled:opacity-50">
+                    <span id="syncIcon" class="text-lg">🔄</span>
+                    <span id="syncText">Sincronizar IA</span>
+                </button>
+
+                <div class="hidden lg:flex flex-col items-end border-l border-slate-200 pl-8 ml-4">
+                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1 text-right">Database Integridade</span>
+                    <span id="lastUpdate" class="text-[11px] font-black text-status-success uppercase tracking-tighter italic">Inicializando...</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-12">
+        <div id="aiOverlay" class="hidden mb-12 p-8 bg-aero-primary/5 rounded-[3rem] border border-aero-primary/20 animate-fade">
+            <div class="flex items-center gap-8">
+                <div class="w-20 h-20 bg-white rounded-3xl flex items-center justify-center shadow-2xl relative overflow-hidden">
+                    <span class="text-4xl sync-rotate z-10">🌀</span>
+                </div>
+                <div>
+                    <h3 class="text-xl font-black text-slate-900 uppercase tracking-tight text-left">Agente Neural em Operação</h3>
+                    <p class="text-sm text-slate-500 font-medium italic text-left">Filtrando duplicatas e aplicando critérios de relevância baseados no seu histórico...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-16">
+            <div class="bg-white p-10 rounded-[3.5rem] border border-slate-100 shadow-sm">
+                <h4 class="font-black text-xs uppercase tracking-[0.3em] text-slate-300 mb-8 text-left">Mix de Inteligência</h4>
+                <div class="chart-wrapper"><canvas id="sectorChart"></canvas></div>
+            </div>
+            <div class="bg-white p-10 rounded-[3.5rem] border border-slate-100 shadow-sm">
+                <h4 class="font-black text-xs uppercase tracking-[0.3em] text-slate-300 mb-8 text-left">Estratégia e TRL</h4>
+                <div id="strategicMap" class="chart-wrapper"></div>
+            </div>
+        </div>
+
+        <!-- Hub de Comando -->
+        <div class="bg-white p-8 rounded-[3rem] border border-slate-100 shadow-2xl mb-16 flex flex-col lg:flex-row justify-between items-center gap-8 sticky top-28 z-40">
+            <div class="flex flex-wrap gap-3">
+                <button id="filter-all" class="px-8 py-3 rounded-2xl text-xs font-black uppercase transition-all bg-slate-900 text-white shadow-xl">Tudo</button>
+                <button id="filter-aero" class="px-8 py-3 rounded-2xl text-xs font-black uppercase transition-all text-slate-400 hover:bg-slate-50">Aeroespacial</button>
+                <button id="filter-defense" class="px-8 py-3 rounded-2xl text-xs font-black uppercase transition-all text-slate-400 hover:bg-slate-50">Defesa</button>
+            </div>
+            <div class="w-full lg:w-[450px] relative">
+                <input type="text" id="searchInput" placeholder="Pesquisar nos registros interceptados..." class="w-full pl-14 pr-8 py-4.5 rounded-[2rem] border-2 border-slate-50 bg-slate-50 focus:bg-white focus:border-aero-primary outline-none transition-all text-sm font-semibold">
+                <span class="absolute left-6 top-4 text-slate-300 text-xl italic">🔍</span>
+            </div>
+        </div>
+
+        <!-- Feed -->
+        <div id="newsFeed" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"></div>
+        
+        <div id="emptyState" class="hidden text-center py-60 opacity-20">
+            <span class="text-9xl">📡</span>
+            <h3 class="text-2xl font-black mt-8 uppercase italic text-center">Nenhum sinal interceptado.</h3>
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div id="newsModal" class="hidden fixed inset-0 z-[60] bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-2 md:p-6">
+        <div class="modal-content bg-white shadow-2xl overflow-hidden flex flex-col lg:flex-row relative animate-fade">
+            <button id="closeModalBtn" class="absolute top-10 right-12 text-slate-300 hover:text-slate-900 transition-all z-10">
+                <span class="text-5xl font-light">✕</span>
+            </button>
+            <div class="flex-1 p-12 md:p-20 overflow-y-auto">
+                <div class="flex gap-4 mb-10">
+                    <span id="mBadgeSec" class="px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.3em] border-2"></span>
+                    <span id="mBadgeSco" class="px-6 py-2 bg-slate-50 text-slate-400 rounded-full text-[10px] font-black uppercase tracking-[0.3em]"></span>
+                </div>
+                <h2 id="mTitle" class="text-3xl md:text-5xl font-black text-slate-900 leading-none tracking-tighter mb-16 uppercase text-left"></h2>
+                <div id="mText" class="space-y-12 text-slate-600 leading-relaxed text-justify text-base lg:text-lg"></div>
+                <div class="mt-20 pt-10 border-t border-slate-50 flex justify-between items-center">
+                    <div class="text-left">
+                        <p class="text-[10px] font-black text-slate-300 uppercase tracking-widest mb-1 text-left">Canal de Origem</p>
+                        <p id="mSource" class="text-slate-900 font-black text-2xl tracking-tighter text-left"></p>
+                    </div>
+                    <div id="mDate" class="text-[11px] font-mono text-slate-400 bg-slate-50 px-8 py-4 rounded-3xl font-black"></div>
+                </div>
+            </div>
+            <div class="w-full lg:w-[450px] bg-slate-50/70 p-12 md:p-24 border-l border-slate-100 flex flex-col items-center justify-center">
+                <div id="mQR" class="qr-canvas mb-10"></div>
+                <a id="mLink" href="#" target="_blank" class="w-full bg-slate-900 text-white text-center py-7 rounded-[2.5rem] font-black text-xs uppercase tracking-[0.4em] hover:bg-aero-primary transition-all duration-500 shadow-2xl">Acessar Signal</a>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, doc, setDoc, onSnapshot, query, deleteDoc, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        // Configurações
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'radar-estrategico-2026';
+        const apiKey = ""; // Ambiente preview
+
+        let reportData = [];
+        let rejectedIds = [];
+        let state = { sector: 'all', search: '', isSyncing: false, user: null };
+        let charts = { sector: null };
+
+        // Inicialização com Autenticação Primeiro (Regra 3)
+        const init = async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.error("Auth Failure:", err);
+            }
+
+            onAuthStateChanged(auth, (user) => {
+                state.user = user;
+                if (!user) return;
+                
+                // Firestore (Regra 1)
+                const qNews = collection(db, 'artifacts', appId, 'public', 'data', 'news');
+                onSnapshot(qNews, (snapshot) => {
+                    reportData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderFeed();
+                    updateCharts();
+                    updateTimestamp();
+                }, (err) => console.error("Firestore Permission/Error:", err));
+
+                const qFeedback = collection(db, 'artifacts', appId, 'users', user.uid, 'feedback');
+                onSnapshot(qFeedback, (snapshot) => {
+                    rejectedIds = snapshot.docs.map(doc => doc.data().newsId);
+                    renderFeed();
+                    updateCharts();
+                }, (err) => console.error("Feedback Load Error:", err));
+            });
+
+            setupEventListeners();
+            initCharts();
+        };
+
+        // --- INTEGRAÇÃO AGENTE GEMINI IA ---
+        const callAiAgent = async (prompt) => {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }],
+                    tools: [{ "google_search": {} }],
+                    generationConfig: { responseMimeType: "application/json" }
+                })
+            });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const result = await response.json();
+            const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+            return JSON.parse(text || "[]");
+        };
+
+        window.syncAllRelevant = async () => {
+            if (state.isSyncing || !state.user) return;
+            state.isSyncing = true;
+            updateSyncUI(true);
+
+            try {
+                const knownUrls = reportData.map(d => d.url).slice(0, 30).join(', ');
+                const userQuery = `Busque notícias do setor aeroespacial e defesa de Janeiro de 2026. 
+                Ignore estas URLs: ${knownUrls}. 
+                Para cada notícia, escreva 3 parágrafos analíticos (P1: Fato, P2: Detalhes Técnicos, P3: Impacto). 
+                JSON Format: [{"title": "...", "sector": "aero|defense", "scope": "national|international", "date": "DD/MM/2026", "impact": 1-10, "readiness": 1-10, "source": "...", "url": "...", "p1": "...", "p2": "...", "p3": "..."}]`;
+
+                const newItems = await callAiAgent(userQuery);
+
+                for (const item of newItems) {
+                    const docId = btoa(item.url).replace(/[^a-zA-Z0-9]/g, "").substring(0, 30);
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'news', docId);
+                    await setDoc(docRef, { ...item, timestamp: Date.now() }, { merge: true });
+                }
+            } catch (err) {
+                console.error("Sync failure:", err);
+            } finally {
+                state.isSyncing = false;
+                updateSyncUI(false);
+            }
+        };
+
+        // --- EVENTOS E UI ---
+        const setupEventListeners = () => {
+            document.getElementById('syncBtn').addEventListener('click', window.syncAllRelevant);
+            document.getElementById('searchInput').addEventListener('input', e => {
+                state.search = e.target.value.toLowerCase();
+                renderFeed();
+            });
+            document.getElementById('filter-all').addEventListener('click', () => setFilter('all'));
+            document.getElementById('filter-aero').addEventListener('click', () => setFilter('aero'));
+            document.getElementById('filter-defense').addEventListener('click', () => setFilter('defense'));
+            document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+        };
+
+        const setFilter = (val) => {
+            state.sector = val;
+            updateFilterUI();
+            renderFeed();
+        };
+
+        const updateFilterUI = () => {
+            ['all', 'aero', 'defense'].forEach(k => {
+                const btn = document.getElementById(`filter-${k}`);
+                if (state.sector === k) {
+                    btn.className = "px-8 py-3 rounded-2xl text-xs font-black uppercase transition-all bg-slate-900 text-white shadow-xl";
+                } else {
+                    btn.className = "px-8 py-3 rounded-2xl text-xs font-black uppercase transition-all text-slate-400 hover:bg-slate-50";
+                }
+            });
+        };
+
+        window.rejectNews = async (newsId) => {
+            if (!state.user) return;
+            const feedbackRef = doc(db, 'artifacts', appId, 'users', state.user.uid, 'feedback', newsId);
+            await setDoc(feedbackRef, { newsId, timestamp: Date.now() });
+        };
+
+        const renderFeed = () => {
+            const data = reportData.filter(d => {
+                if (rejectedIds.includes(d.id)) return false;
+                const mSec = state.sector === 'all' || d.sector === state.sector;
+                const matchSearch = (d.title + d.summary + d.source).toLowerCase().includes(state.search);
+                return mSec && matchSearch;
+            });
+
+            const feed = document.getElementById('newsFeed');
+            const empty = document.getElementById('emptyState');
+            if (data.length === 0) { feed.innerHTML = ''; empty.classList.remove('hidden'); return; }
+            empty.classList.add('hidden');
+
+            feed.innerHTML = data.sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0)).map(d => `
+                <div onclick="window.openModal('${d.id}')" class="premium-card p-10 rounded-[3.5rem] flex flex-col h-full cursor-pointer group animate-fade">
+                    <button onclick="event.stopPropagation(); window.rejectNews('${d.id}')" class="reject-btn absolute top-8 right-8 w-12 h-12 bg-red-50 text-red-500 rounded-full flex items-center justify-center hover:bg-red-500 hover:text-white shadow-sm z-10">
+                        ✕
+                    </button>
+                    <div class="flex items-center gap-3 mb-8">
+                        <span class="text-[9px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full ${d.sector === 'aero' ? 'bg-aero-surface text-aero-primary' : 'bg-slate-50 text-mil-primary'} border">
+                            ${d.sector}
+                        </span>
+                        <span class="text-[9px] font-bold text-slate-300 uppercase">${d.date}</span>
+                    </div>
+                    <h4 class="text-xl font-black text-slate-900 mb-6 group-hover:text-aero-primary transition-colors leading-tight tracking-tighter uppercase text-left">${d.title}</h4>
+                    <p class="text-xs text-slate-500 line-clamp-3 mb-10 leading-relaxed font-medium text-left">${d.summary || (d.p1?.substring(0, 140) + '...')}</p>
+                    <div class="mt-auto pt-6 border-t border-slate-50 flex justify-between items-center text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                        <span>${d.source}</span>
+                    </div>
+                </div>
+            `).join('');
+        };
+
+        const updateTimestamp = () => {
+            const now = new Date();
+            document.getElementById('lastUpdate').innerText = now.toLocaleDateString('pt-BR', {day:'2-digit', month:'short'}).toUpperCase() + " " + now.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+        };
+
+        const initCharts = () => {
+            const ctx = document.getElementById('sectorChart').getContext('2d');
+            charts.sector = new Chart(ctx, {
+                type: 'doughnut',
+                data: { labels: ['Aero', 'Defesa'], datasets: [{ data: [0,0], backgroundColor: ['#0284c7', '#4b5320'], borderWidth: 0 }] },
+                options: { responsive: true, maintainAspectRatio: false, cutout: '88%', plugins: { legend: { display: false } } }
+            });
+        };
+
+        const updateCharts = () => {
+            const visibleData = reportData.filter(d => !rejectedIds.includes(d.id));
+            const counts = { aero: 0, defense: 0 };
+            visibleData.forEach(d => d.sector === 'aero' ? counts.aero++ : counts.defense++);
+            if (charts.sector) {
+                charts.sector.data.datasets[0].data = [counts.aero, counts.defense];
+                charts.sector.update();
+            }
+            const trace = {
+                x: visibleData.map(i => i.readiness),
+                y: visibleData.map(i => i.impact),
+                text: visibleData.map(i => i.title),
+                mode: 'markers',
+                marker: { size: 14, color: visibleData.map(i => i.sector === 'aero' ? '#0284c7' : '#4b5320'), opacity: 0.7, line: { width: 2, color: '#fff' } },
+                hovertemplate: '<b>%{text}</b><br>TRL: %{x}<br>Impacto: %{y}<extra></extra>'
+            };
+            Plotly.newPlot('strategicMap', [trace], { margin: { t: 10, r: 10, b: 35, l: 35 }, xaxis: { range: [0, 11], gridcolor: '#f1f5f9' }, yaxis: { range: [0, 11], gridcolor: '#f1f5f9' }, paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)', font: { family: 'Inter', size: 10 } }, { responsive: true, displayModeBar: false });
+        };
+
+        const updateSyncUI = (active) => {
+            const icon = document.getElementById('syncIcon');
+            const text = document.getElementById('syncText');
+            const overlay = document.getElementById('aiOverlay');
+            if (active) {
+                icon.classList.add('sync-rotate');
+                text.innerText = "Agente Ativo...";
+                overlay.classList.remove('hidden');
+            } else {
+                icon.classList.remove('sync-rotate');
+                text.innerText = "Sincronizar IA";
+                setTimeout(() => overlay.classList.add('hidden'), 1000);
+            }
+        };
+
+        window.openModal = (id) => {
+            const d = reportData.find(x => x.id === id);
+            if (!d) return;
+            const m = document.getElementById('newsModal');
+            document.getElementById('mTitle').innerText = d.title;
+            document.getElementById('mBadgeSec').innerText = d.sector.toUpperCase();
+            document.getElementById('mBadgeSco').innerText = (d.scope || 'Global').toUpperCase();
+            document.getElementById('mText').innerHTML = `<p>${d.p1}</p><p>${d.p2}</p><p>${d.p3}</p>`;
+            document.getElementById('mSource').innerText = d.source;
+            document.getElementById('mDate').innerText = d.date;
+            document.getElementById('mLink').href = d.url;
+            const qrEl = document.getElementById('mQR');
+            qrEl.innerHTML = '';
+            new QRCode(qrEl, { text: d.url, width: 220, height: 220, colorDark : "#0f172a", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H });
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        };
+
+        const closeModal = () => { document.getElementById('newsModal').classList.add('hidden'); document.body.style.overflow = 'auto'; };
+        
+        window.closeModal = closeModal;
+        init();
+    </script>
+</body>
+</html>
