@@ -3,75 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Radar Estratégico Pro | v5.2 Stable</title>
+    <title>Radar Estratégico Pro | v5.3 Stable</title>
     
-    <!-- Bibliotecas -->
+    <!-- 1. Carregamento de Bibliotecas (Versões Estáveis UMD) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     
-    <!-- Ícones e Fontes -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <!-- Configuração do Tailwind (Deve vir logo após o script do Tailwind) -->
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        slate: { 850: '#151e32', 900: '#0f172a' },
-                        aero: { light: '#38bdf8', DEFAULT: '#0284c7', dark: '#0c4a6e' },
-                        def: { light: '#84cc16', DEFAULT: '#4d7c0f', dark: '#365314' },
-                    },
-                    fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
-                    animation: {
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'spin-slow': 'spin 2s linear infinite',
-                        'fade-in': 'fadeIn 0.5s ease-out forwards'
-                    },
-                    keyframes: {
-                        fadeIn: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
+        // Verificação de segurança para o Tailwind
+        if (typeof tailwind !== 'undefined') {
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            slate: { 850: '#151e32', 900: '#0f172a' },
+                            aero: { light: '#38bdf8', DEFAULT: '#0284c7', dark: '#0c4a6e' },
+                            def: { light: '#84cc16', DEFAULT: '#4d7c0f', dark: '#365314' },
+                        },
+                        fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] },
+                        animation: {
+                            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                            'spin-slow': 'spin 2s linear infinite',
+                            'fade-in': 'fadeIn 0.5s ease-out forwards'
+                        },
+                        keyframes: {
+                            fadeIn: { '0%': { opacity: '0', transform: 'translateY(10px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } }
+                        }
                     }
                 }
             }
         }
     </script>
 
+    <!-- Chart.js (Versão UMD para garantir variável global 'Chart') -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <!-- Fontes e Ícones -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         body { background-color: #f8fafc; color: #0f172a; overflow-x: hidden; }
         .glass-panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(226, 232, 240, 0.8); }
         
+        /* Card Pro Design */
         .pro-card {
             background: white; border: 1px solid #e2e8f0; border-radius: 2rem;
             transition: all 0.4s ease; position: relative; overflow: hidden;
         }
         .pro-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px -12px rgba(2, 132, 199, 0.1); border-color: #0284c7; }
         
+        /* Modal */
         #newsModal .modal-content { max-height: 92vh; width: 95vw; max-width: 1200px; border-radius: 3rem; }
         
+        /* Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         
-        .loading-line { height: 3px; background: linear-gradient(90deg, #0284c7, #4d7c0f); width: 0%; transition: width 0.3s; position: fixed; top: 0; left: 0; z-index: 100; }
+        .loading-bar { height: 3px; background: linear-gradient(90deg, #0284c7, #4d7c0f); width: 0%; transition: width 0.3s; position: fixed; top: 0; left: 0; z-index: 100; }
         .text-justify { text-align: justify; }
     </style>
 </head>
 <body class="antialiased font-sans">
 
-    <!-- Progress Bar -->
-    <div id="loadingLine" class="loading-line"></div>
+    <div id="loadingLine" class="loading-bar"></div>
 
-    <!-- Header -->
+    <!-- HEADER -->
     <header class="glass-panel sticky top-0 z-50 h-24 flex items-center justify-between px-6 lg:px-12 shadow-sm">
         <div class="flex items-center gap-5">
             <div class="w-12 h-12 bg-slate-900 rounded-2xl flex items-center justify-center text-white shadow-xl">
                 <i class="fa-solid fa-brain text-2xl"></i>
             </div>
             <div>
-                <h1 class="text-xl font-black tracking-tighter uppercase text-slate-900 leading-none">Radar Estratégico <span class="text-aero-DEFAULT text-xs align-top">PRO</span></h1>
-                <p class="text-[10px] font-bold text-slate-400 tracking-[0.25em] uppercase mt-1">Intelligence Hub v5.2</p>
+                <h1 class="text-xl font-black tracking-tighter uppercase text-slate-900 leading-none">Radar Estratégico <span class="text-aero-DEFAULT text-xs align-top">PRO v5.3</span></h1>
+                <p class="text-[10px] font-bold text-slate-400 tracking-[0.25em] uppercase mt-1">Intelligence Hub</p>
             </div>
         </div>
 
@@ -98,8 +106,8 @@
                 <i class="fa-solid fa-microchip text-4xl text-aero-DEFAULT animate-pulse"></i>
                 <div class="absolute inset-0 border-4 border-aero-DEFAULT/20 rounded-full border-t-aero-DEFAULT animate-spin"></div>
             </div>
-            <h2 class="text-3xl font-black text-slate-900 mb-4">Negociando com Satélites de Dados...</h2>
-            <p id="aiStatusText" class="text-slate-500 font-medium text-lg">Gerenciando taxa de requisição (Rate Limit Handler)...</p>
+            <h2 class="text-3xl font-black text-slate-900 mb-4">Varredura e Sanitização</h2>
+            <p id="aiStatusText" class="text-slate-500 font-medium text-lg">Processando resposta neural...</p>
         </div>
     </div>
 
@@ -108,12 +116,12 @@
         
         <!-- Dashboard Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-            <!-- Timeline Chart -->
+            <!-- Chart 1 -->
             <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col h-[420px]">
                 <div class="flex justify-between items-start mb-6">
                     <div>
                         <h3 class="text-sm font-black text-slate-800 uppercase tracking-wide">Densidade Temporal</h3>
-                        <p class="text-[10px] text-slate-400 font-bold uppercase">Eventos por dia (Jan 2026)</p>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase">Volume de eventos (Jan 2026)</p>
                     </div>
                     <span class="px-3 py-1 bg-slate-50 rounded-lg text-[10px] font-black text-slate-400">TIMELINE</span>
                 </div>
@@ -122,7 +130,7 @@
                 </div>
             </div>
 
-            <!-- Strategic Matrix -->
+            <!-- Chart 2 -->
             <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col h-[420px]">
                 <div class="flex justify-between items-start mb-6">
                     <div>
@@ -168,13 +176,12 @@
     <div id="configModal" class="hidden fixed inset-0 z-[70] bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl animate-fade-in">
             <h3 class="text-xl font-black text-slate-900 mb-4">Configuração do Agente</h3>
-            <p class="text-sm text-slate-500 mb-6 text-justify">Para habilitar a busca, insira sua chave API do Google Gemini. Se der erro 429, aguarde alguns minutos e tente novamente.</p>
+            <p class="text-sm text-slate-500 mb-6 text-justify">Para habilitar a busca, insira sua chave API do Google Gemini.</p>
             <input type="password" id="apiKeyInput" placeholder="Cole sua API Key aqui..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm mb-4 focus:ring-2 focus:ring-aero-DEFAULT outline-none">
             <div class="flex gap-3">
                 <button onclick="saveConfig()" class="flex-1 bg-slate-900 text-white py-3 rounded-xl font-bold text-sm hover:bg-aero-DEFAULT transition-colors">Salvar e Ativar</button>
                 <button onclick="document.getElementById('configModal').classList.add('hidden')" class="px-6 py-3 rounded-xl font-bold text-sm text-slate-500 hover:bg-slate-100">Cancelar</button>
             </div>
-            <p class="text-[10px] text-slate-400 mt-4 text-center">Não tem uma chave? <a href="https://aistudio.google.com/app/apikey" target="_blank" class="text-aero-DEFAULT hover:underline">Obter chave gratuita</a></p>
         </div>
     </div>
 
@@ -237,19 +244,20 @@
 
         // --- STATE MANAGEMENT ---
         let appData = [...initialData];
-        let rejectedTags = [];
+        let rejectedIds = [];
         let currentFilter = { sector: 'all', search: '' };
         let charts = { timeline: null, matrix: null };
 
-        // --- CORE FUNCTIONS ---
+        // --- FUNÇÕES DE API ---
         function getApiKey() {
             return localStorage.getItem('gemini_api_key') || '';
         }
 
         function openConfig() {
-            document.getElementById('configModal').classList.remove('hidden');
-            document.getElementById('configModal').classList.add('flex');
+            const modal = document.getElementById('configModal');
             document.getElementById('apiKeyInput').value = getApiKey();
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
         }
 
         function saveConfig() {
@@ -260,8 +268,19 @@
                 document.getElementById('configModal').classList.add('hidden');
                 document.getElementById('configModal').classList.remove('flex');
             } else {
-                alert("Insira uma chave válida.");
+                alert("Por favor, insira uma chave válida.");
             }
+        }
+
+        // --- CLEAN JSON HELPER ---
+        function cleanJson(text) {
+            // Tenta encontrar o array JSON dentro de markdown ou texto
+            const firstBracket = text.indexOf('[');
+            const lastBracket = text.lastIndexOf(']');
+            if (firstBracket !== -1 && lastBracket !== -1) {
+                return text.substring(firstBracket, lastBracket + 1);
+            }
+            return text; // Tenta parsear direto se não achar brackets
         }
 
         async function syncWithAI() {
@@ -278,20 +297,26 @@
             btn.disabled = true;
             overlay.classList.remove('hidden');
             overlay.classList.add('flex');
-
+            
             try {
+                // Contexto
                 const knownTitles = appData.map(d => d.title).join("; ");
                 
                 const prompt = `
-                    Atue como analista sênior. Busque 2 novas notícias VERIFICÁVEIS de JANEIRO 2026 (Aero/Defesa).
-                    IGNORE: ${knownTitles}.
-                    JSON ONLY:
-                    [{
-                        "title": "...", "sector": "aero|defense", "scope": "national|international", 
-                        "date": "DD/MM/2026", "source": "...", "url": "...", "summary": "...", 
-                        "p1": "Contexto (60 words)", "p2": "Técnico (60 words)", "p3": "Impacto (60 words)", 
-                        "impact": 1-10, "readiness": 1-10
-                    }]
+                    Atue como um analista de inteligência sênior em Aeroespacial e Defesa.
+                    Busque 2 novas notícias REAIS e VERIFICÁVEIS de JANEIRO DE 2026.
+                    NÃO repita estas notícias: ${knownTitles}.
+                    
+                    REQUISITO CRÍTICO DE FORMATO:
+                    Para cada notícia, gere um JSON com:
+                    title, sector (aero/defense), scope (national/international), date (DD/MM/2026), 
+                    source, url, summary, 
+                    p1 (Contexto - parágrafo longo de 60-80 palavras), 
+                    p2 (Detalhes Técnicos - parágrafo longo de 60-80 palavras), 
+                    p3 (Impacto Estratégico - parágrafo longo de 60-80 palavras),
+                    impact (1-10), readiness (1-10).
+                    
+                    Retorne APENAS o JSON array. Sem markdown, sem introdução.
                 `;
 
                 // IMPLEMENTAÇÃO DE RETRY PARA CORRIGIR ERRO 429
@@ -329,10 +354,24 @@
                 if (!response) throw new Error("Falha na conexão após retentativas.");
 
                 const data = await response.json();
-                let text = data.candidates[0].content.parts[0].text;
-                text = text.replace(/```json/g, '').replace(/```/g, '').trim();
-                const newItems = JSON.parse(text);
                 
+                // --- SANITIZAÇÃO CRÍTICA DO JSON ---
+                if (!data.candidates || !data.candidates[0] || !data.candidates[0].content) {
+                    throw new Error("Resposta da IA vazia ou inválida.");
+                }
+
+                let rawText = data.candidates[0].content.parts[0].text;
+                let cleanText = cleanJson(rawText);
+                
+                let newItems;
+                try {
+                    newItems = JSON.parse(cleanText);
+                } catch (e) {
+                    console.error("Falha ao parsear JSON limpo:", cleanText);
+                    throw new Error("A resposta da IA não é um JSON válido.");
+                }
+                
+                // Integração
                 let addedCount = 0;
                 newItems.forEach(item => {
                     if (!appData.some(d => d.title === item.title)) {
@@ -342,7 +381,7 @@
                     }
                 });
 
-                if(addedCount > 0) alert(`${addedCount} novos relatórios integrados.`);
+                if(addedCount > 0) alert(`${addedCount} novos relatórios de inteligência adicionados com sucesso.`);
                 else alert("Nenhum fato novo relevante encontrado no momento.");
 
             } catch (error) {
@@ -361,133 +400,161 @@
             }
         }
 
-        // --- FILTROS E RENDERIZAÇÃO ---
-        function filterData(type) {
-            currentFilter.sector = type;
+        // --- RENDERIZAÇÃO ---
+        function renderFeed() {
+            const grid = document.getElementById('newsGrid');
+            const filtered = appData.filter(d => {
+                if (rejectedIds.includes(d.id)) return false;
+                const matchSec = currentFilter.sector === 'all' || d.sector === currentFilter.sector;
+                const matchSearch = (d.title + d.source + d.summary).toLowerCase().includes(currentFilter.search);
+                return matchSec && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                document.getElementById('emptyState').classList.remove('hidden');
+                document.getElementById('emptyState').classList.add('flex');
+                grid.innerHTML = '';
+                return;
+            }
+
+            document.getElementById('emptyState').classList.add('hidden');
+            document.getElementById('emptyState').classList.remove('flex');
+
+            grid.innerHTML = filtered.sort((a,b) => new Date(b.date.split('/').reverse().join('-')) - new Date(a.date.split('/').reverse().join('-'))).map(item => `
+                <div onclick="openModal(${item.id})" class="pro-card p-8 cursor-pointer group animate-fade-in">
+                    <button onclick="event.stopPropagation(); rejectItem(${item.id})" class="absolute top-4 right-4 text-slate-300 hover:text-red-500 transition-colors z-10 p-2" title="Marcar como Irrelevante">
+                        <i class="fa-solid fa-ban"></i>
+                    </button>
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded ${item.sector === 'aero' ? 'bg-aero-surface text-aero-DEFAULT' : 'bg-lime-50 text-def-DEFAULT'}">
+                            ${item.sector === 'aero' ? 'AERO' : 'DEFESA'}
+                        </span>
+                        <span class="text-[10px] font-bold text-slate-400 font-mono">${item.date}</span>
+                    </div>
+                    <h3 class="text-lg font-black text-slate-900 leading-tight mb-4 group-hover:text-aero-DEFAULT transition-colors">
+                        ${item.title}
+                    </h3>
+                    <p class="text-xs text-slate-500 font-medium leading-relaxed line-clamp-3">
+                        ${item.summary || item.p1.substring(0, 120) + '...'}
+                    </p>
+                    <div class="mt-6 pt-4 border-t border-slate-50 flex justify-between items-center">
+                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">${item.source}</span>
+                        <i class="fa-solid fa-arrow-right text-slate-300 group-hover:text-aero-DEFAULT group-hover:translate-x-1 transition-transform"></i>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterData(sec) {
+            currentFilter.sector = sec;
             ['all', 'aero', 'defense'].forEach(t => {
                 const btn = document.getElementById(`tab-${t}`);
-                if(type === t) {
-                    btn.className = "flex-1 md:flex-none px-6 py-2 rounded-lg text-xs font-bold transition-all bg-slate-900 text-white shadow-md transform scale-105";
+                if (t === sec) {
+                    btn.className = "flex-1 md:flex-none px-8 py-3 rounded-xl text-xs font-black transition-all bg-slate-900 text-white shadow-lg transform scale-105";
                 } else {
-                    btn.className = `flex-1 md:flex-none px-6 py-2 rounded-lg text-xs font-bold transition-all text-slate-500 hover:text-${t === 'all' ? 'slate-900' : (t === 'aero' ? 'aero-DEFAULT' : 'def-DEFAULT')}`;
+                    btn.className = "flex-1 md:flex-none px-8 py-3 rounded-xl text-xs font-black transition-all text-slate-500 hover:text-slate-900";
                 }
             });
             renderFeed();
             updateCharts();
         }
 
-        function renderFeed() {
-            const grid = document.getElementById('newsGrid');
-            const empty = document.getElementById('emptyState');
-            
-            const filtered = appData.filter(item => {
-                const matchSector = currentFilter.sector === 'all' || item.sector === currentFilter.sector;
-                const matchSearch = (item.title + item.source).toLowerCase().includes(currentFilter.search);
-                const isRejected = rejectedTags.some(tag => item.title.includes(tag));
-                return matchSector && matchSearch && !isRejected;
-            });
-
-            document.getElementById('dbCounter').innerText = `${filtered.length} Registros Ativos`;
-
-            if (filtered.length === 0) {
-                grid.innerHTML = '';
-                empty.classList.remove('hidden');
-                empty.classList.add('flex');
-                return;
-            }
-
-            empty.classList.add('hidden');
-            empty.classList.remove('flex');
-
-            // Ordenação Cronológica Reversa
-            filtered.sort((a,b) => {
-                const dateA = new Date(a.date.split('/').reverse().join('-'));
-                const dateB = new Date(b.date.split('/').reverse().join('-'));
-                return dateB - dateA;
-            });
-
-            grid.innerHTML = filtered.map(item => `
-                <div onclick="openModal(${item.id})" class="pro-card ${item.sector === 'aero' ? 'aero' : 'defense'} p-6 cursor-pointer group">
-                    <button onclick="event.stopPropagation(); rejectItem(${item.id})" class="absolute top-4 right-4 text-slate-300 hover:text-red-500 transition-colors z-10 p-2">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                    <div class="flex justify-between items-start mb-4 pl-3">
-                        <span class="text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded ${item.sector === 'aero' ? 'bg-aero-surface text-aero-dark' : 'bg-lime-50 text-def-dark'}">
-                            ${item.sector === 'aero' ? 'AERO' : 'DEFESA'}
-                        </span>
-                        <span class="text-[10px] font-mono text-slate-400 mr-6">${item.date}</span>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-900 leading-tight mb-3 group-hover:text-aero-DEFAULT transition-colors pl-3 pr-4">${item.title}</h3>
-                    <p class="text-xs text-slate-500 font-medium line-clamp-3 pl-3 mb-6 leading-relaxed">${item.p1.substring(0, 140)}...</p>
-                    <div class="mt-auto pl-3 pt-4 border-t border-slate-50 flex justify-between items-center">
-                        <span class="text-[10px] font-bold text-slate-400 uppercase">${item.source}</span>
-                        <i class="fa-solid fa-arrow-right text-slate-300 group-hover:text-aero-DEFAULT group-hover:translate-x-1 transition-all"></i>
-                    </div>
-                </div>
-            `).join('');
-        }
-
         function rejectItem(id) {
-            const item = appData.find(i => i.id === id);
-            if(item) {
-                rejectedTags.push(item.title.split(' ')[0]);
-                appData = appData.filter(i => i.id !== id);
-                renderFeed();
-                updateCharts();
-            }
+            rejectedIds.push(id);
+            renderFeed();
+            updateCharts();
         }
 
-        // --- CHARTS LOGIC (Fixed Sorting) ---
+        function openModal(id) {
+            const item = appData.find(d => d.id === id);
+            if (!item) return;
+
+            const m = document.getElementById('newsModal');
+            document.getElementById('modalTitle').innerText = item.title;
+            document.getElementById('modalSector').innerText = item.sector === 'aero' ? 'AEROESPACIAL' : 'DEFESA';
+            document.getElementById('modalSector').className = `px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest border ${item.sector === 'aero' ? 'border-aero-DEFAULT text-aero-DEFAULT' : 'border-def-DEFAULT text-def-DEFAULT'}`;
+            document.getElementById('modalScope').innerText = item.scope === 'national' ? 'NACIONAL' : 'INTERNACIONAL';
+            
+            document.getElementById('modalBody').innerHTML = `
+                <p>${item.p1}</p>
+                <p>${item.p2}</p>
+                <p>${item.p3}</p>
+            `;
+            
+            document.getElementById('modalSource').innerText = item.source;
+            document.getElementById('modalDate').innerText = item.date;
+            document.getElementById('modalLink').href = item.url;
+            
+            // QR Code
+            const qrBox = document.getElementById('qrcode');
+            qrBox.innerHTML = '';
+            new QRCode(qrBox, {
+                text: item.url,
+                width: 120,
+                height: 120,
+                colorDark : "#0f172a",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.H
+            });
+
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('newsModal').classList.add('hidden');
+            document.getElementById('newsModal').classList.remove('flex');
+            document.body.style.overflow = 'auto';
+        }
+
+        // --- CHARTS ---
+        function initCharts() {
+            // Check if Chart is defined
+            if (typeof Chart !== 'undefined') {
+                const ctxT = document.getElementById('timelineChart').getContext('2d');
+                charts.timeline = new Chart(ctxT, {
+                    type: 'bar',
+                    data: getTimelineData(),
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { display: false },
+                            x: { grid: { display: false }, ticks: { font: { family: 'Inter', size: 10 } } }
+                        },
+                        borderRadius: 6
+                    }
+                });
+            }
+
+            // Scatter Chart (Plotly)
+            updateMatrix();
+        }
+
         function getTimelineData() {
             const counts = {};
-            appData.forEach(d => {
-                const day = parseInt(d.date.split('/')[0], 10); // Parse as int for sorting
+            appData.filter(d => !rejectedIds.includes(d.id)).forEach(d => {
+                const day = parseInt(d.date.split('/')[0], 10);
                 counts[day] = (counts[day] || 0) + 1;
             });
-            
-            // Sort keys numerically
-            const sortedDays = Object.keys(counts).map(Number).sort((a,b) => a - b);
-            
+            const days = Object.keys(counts).map(Number).sort((a,b) => a - b);
             return {
-                labels: sortedDays.map(d => `Dia ${d}`),
+                labels: days.map(d => `Dia ${d}`),
                 datasets: [{
-                    data: sortedDays.map(d => counts[d]),
-                    backgroundColor: '#0284c7',
-                    borderRadius: 4,
-                    barThickness: 12
+                    data: days.map(d => counts[d]),
+                    backgroundColor: '#0284c7'
                 }]
             };
         }
 
-        function initCharts() {
-            // Timeline
-            if(charts.timeline) charts.timeline.destroy();
-            const ctxT = document.getElementById('timelineChart').getContext('2d');
-            charts.timeline = new Chart(ctxT, {
-                type: 'bar',
-                data: getTimelineData(),
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { display: false, beginAtZero: true },
-                        x: { grid: { display: false }, ticks: { font: { family: 'Inter', size: 9 } } }
-                    }
-                }
-            });
-
-            updateMatrix();
-        }
-
         function updateMatrix() {
-            const aeroData = appData.filter(d => d.sector === 'aero');
-            const defData = appData.filter(d => d.sector === 'defense');
-
+            const validData = appData.filter(d => !rejectedIds.includes(d.id));
             const traceAero = {
-                x: aeroData.map(d => d.readiness),
-                y: aeroData.map(d => d.impact),
-                text: aeroData.map(d => d.title),
+                x: validData.filter(d => d.sector === 'aero').map(d => d.readiness),
+                y: validData.filter(d => d.sector === 'aero').map(d => d.impact),
+                text: validData.filter(d => d.sector === 'aero').map(d => d.title),
                 mode: 'markers',
                 type: 'scatter',
                 name: 'Aero',
@@ -496,9 +563,9 @@
             };
 
             const traceDef = {
-                x: defData.map(d => d.readiness),
-                y: defData.map(d => d.impact),
-                text: defData.map(d => d.title),
+                x: validData.filter(d => d.sector === 'defense').map(d => d.readiness),
+                y: validData.filter(d => d.sector === 'defense').map(d => d.impact),
+                text: validData.filter(d => d.sector === 'defense').map(d => d.title),
                 mode: 'markers',
                 type: 'scatter',
                 name: 'Defesa',
@@ -516,7 +583,9 @@
                 font: { family: 'Inter', size: 10, color: '#64748b' }
             };
 
-            Plotly.newPlot('strategicMap', [traceAero, traceDef], layout, {displayModeBar: false, responsive: true});
+            if (typeof Plotly !== 'undefined') {
+                Plotly.newPlot('strategicMap', [traceAero, traceDef], layout, {displayModeBar: false, responsive: true});
+            }
         }
 
         function updateCharts() {
@@ -527,113 +596,18 @@
             updateMatrix();
         }
 
-        // --- MODAL FUNCTIONS ---
-        function openModal(id) {
-            const item = appData.find(i => i.id === id);
-            if(!item) return;
-
-            const modal = document.getElementById('newsModal');
-            document.getElementById('modalTitle').innerText = item.title;
-            document.getElementById('modalSector').innerText = item.sector === 'aero' ? 'AEROESPACIAL' : 'DEFESA';
-            document.getElementById('modalSector').className = `px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-widest border ${item.sector === 'aero' ? 'border-aero-light text-aero-dark bg-aero-surface' : 'border-def-light text-def-dark bg-lime-50'}`;
-            document.getElementById('modalScope').innerText = item.scope === 'national' ? 'BRASIL' : 'GLOBAL';
-            
-            document.getElementById('modalBody').innerHTML = `
-                <p>${item.p1}</p>
-                <p>${item.p2}</p>
-                <p>${item.p3}</p>
-            `;
-
-            document.getElementById('modalImpact').innerText = item.impact + "/10";
-            document.getElementById('modalReadiness').innerText = "TRL " + item.readiness;
-            document.getElementById('modalUrl').innerText = item.url;
-            document.getElementById('modalLink').href = item.url;
-
-            // QR Code
-            const qrContainer = document.getElementById('qrcode');
-            qrContainer.innerHTML = '';
-            new QRCode(qrContainer, {
-                text: item.url,
-                width: 100,
-                height: 100,
-                colorDark : "#0f172a",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.L
-            });
-
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            setTimeout(() => {
-                document.querySelector('.modal-overlay').classList.add('active');
-            }, 10);
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('newsModal');
-            document.querySelector('.modal-overlay').classList.remove('active');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }, 300);
-            document.body.style.overflow = 'auto';
-        }
-
-        function openConfig() {
-            document.getElementById('configModal').classList.remove('hidden');
-            document.getElementById('configModal').classList.add('flex');
-            document.getElementById('apiKeyInput').value = getApiKey();
-        }
-
-        function saveConfig() {
-            const key = document.getElementById('apiKeyInput').value.trim();
-            if(key) {
-                localStorage.setItem('gemini_api_key', key);
-                alert("Configuração salva.");
-                document.getElementById('configModal').classList.add('hidden');
-                document.getElementById('configModal').classList.remove('flex');
-            }
-        }
-
-        // --- INIT ---
+        // Init
         window.addEventListener('DOMContentLoaded', init);
         document.getElementById('searchInput').addEventListener('input', (e) => {
             currentFilter.search = e.target.value.toLowerCase();
             renderFeed();
         });
 
+        function init() {
+            renderFeed();
+            initCharts();
+        }
+
     </script>
-
-    <!-- Modais Auxiliares -->
-    <div id="configModal" class="modal-overlay fixed inset-0 z-[70] bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-        <div class="modal-content bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl">
-            <h3 class="text-xl font-black text-slate-900 mb-4">Configuração API</h3>
-            <p class="text-sm text-slate-500 mb-6">Insira sua chave Gemini API para habilitar a busca neural em tempo real.</p>
-            <input type="password" id="apiKeyInput" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm mb-4 outline-none focus:ring-2 focus:ring-slate-900" placeholder="Cole sua chave aqui...">
-            <div class="flex gap-3">
-                <button onclick="saveConfig()" class="flex-1 bg-slate-900 text-white py-3 rounded-xl font-bold text-sm">Salvar</button>
-                <button onclick="document.getElementById('configModal').classList.add('hidden'); document.getElementById('configModal').classList.remove('flex');" class="px-6 py-3 rounded-xl font-bold text-sm text-slate-500 bg-slate-100">Cancelar</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Detalhes (Estrutura) -->
-    <div id="newsModal" class="modal-overlay fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
-        <div class="modal-content bg-white w-full h-full max-h-[90vh] rounded-3xl shadow-2xl flex flex-col lg:flex-row overflow-hidden relative">
-            <button onclick="closeModal()" class="absolute top-6 right-6 z-10 w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-900 hover:text-white transition-all"><i class="fa-solid fa-times"></i></button>
-            <div class="flex-1 p-8 lg:p-12 overflow-y-auto">
-                <div class="flex gap-3 mb-6"><span id="modalSector"></span><span id="modalScope"></span></div>
-                <h2 id="modalTitle" class="text-3xl lg:text-4xl font-black text-slate-900 leading-tight mb-8"></h2>
-                <div id="modalBody" class="space-y-6 text-slate-600 text-sm lg:text-base leading-relaxed text-justify font-medium"></div>
-                <div class="mt-12 pt-8 border-t border-slate-100"><p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Impacto</p><div class="flex gap-2"><div class="flex-1 bg-slate-50 p-4 rounded-xl border border-slate-100"><span class="block text-xl font-black text-slate-900" id="modalImpact"></span><span class="text-[10px] text-slate-400 font-bold uppercase">Nível</span></div><div class="flex-1 bg-slate-50 p-4 rounded-xl border border-slate-100"><span class="block text-xl font-black text-slate-900" id="modalReadiness"></span><span class="text-[10px] text-slate-400 font-bold uppercase">TRL</span></div></div></div>
-            </div>
-            <div class="lg:w-[400px] bg-slate-50 border-l border-slate-200 p-8 lg:p-12 flex flex-col justify-center items-center text-center">
-                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-8"><div id="qrcode" class="opacity-90"></div></div>
-                <p id="modalUrl" class="text-[10px] font-mono text-slate-400 break-all mb-8 max-w-[250px]"></p>
-                <a id="modalLink" href="#" target="_blank" class="w-full bg-slate-900 text-white font-bold text-xs uppercase tracking-widest py-4 rounded-xl hover:bg-aero-DEFAULT transition-all shadow-lg">Acessar Fonte</a>
-            </div>
-        </div>
-    </div>
-
 </body>
 </html>
