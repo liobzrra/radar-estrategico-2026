@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Radar Estratégico Pro | AI Integrated</title>
+    <title>Radar Estratégico Pro | v5.2 Stable</title>
     
     <!-- Bibliotecas -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -40,24 +40,22 @@
 
     <style>
         body { background-color: #f8fafc; color: #0f172a; overflow-x: hidden; }
-        .glass-panel { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(226, 232, 240, 0.8); }
+        .glass-panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px); border-bottom: 1px solid rgba(226, 232, 240, 0.8); }
         
-        /* Card Pro Design */
         .pro-card {
             background: white; border: 1px solid #e2e8f0; border-radius: 2rem;
             transition: all 0.4s ease; position: relative; overflow: hidden;
         }
-        .pro-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px -12px rgba(2, 132, 199, 0.15); border-color: #0284c7; }
+        .pro-card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px -12px rgba(2, 132, 199, 0.1); border-color: #0284c7; }
         
-        /* Modal */
         #newsModal .modal-content { max-height: 92vh; width: 95vw; max-width: 1200px; border-radius: 3rem; }
         
-        /* Scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         
         .loading-line { height: 3px; background: linear-gradient(90deg, #0284c7, #4d7c0f); width: 0%; transition: width 0.3s; position: fixed; top: 0; left: 0; z-index: 100; }
+        .text-justify { text-align: justify; }
     </style>
 </head>
 <body class="antialiased font-sans">
@@ -72,22 +70,20 @@
                 <i class="fa-solid fa-brain text-2xl"></i>
             </div>
             <div>
-                <h1 class="text-xl font-black tracking-tighter uppercase text-slate-900 leading-none">Radar Estratégico <span class="text-aero-DEFAULT text-xs align-top">AI</span></h1>
-                <p class="text-[10px] font-bold text-slate-400 tracking-[0.25em] uppercase mt-1">Intelligence Hub</p>
+                <h1 class="text-xl font-black tracking-tighter uppercase text-slate-900 leading-none">Radar Estratégico <span class="text-aero-DEFAULT text-xs align-top">PRO</span></h1>
+                <p class="text-[10px] font-bold text-slate-400 tracking-[0.25em] uppercase mt-1">Intelligence Hub v5.2</p>
             </div>
         </div>
 
         <div class="flex items-center gap-6">
-            <!-- Botão Config API -->
             <button onclick="openConfig()" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 transition-colors" title="Configurar Chave API">
                 <i class="fa-solid fa-gear"></i>
             </button>
 
-            <!-- Botão Sincronizar -->
             <button onclick="syncWithAI()" id="syncBtn" class="flex items-center gap-3 bg-slate-900 hover:bg-aero-DEFAULT text-white px-6 py-3 rounded-2xl transition-all shadow-xl hover:shadow-aero-DEFAULT/30 group">
                 <i id="syncIcon" class="fa-solid fa-rotate text-sm group-hover:rotate-180 transition-transform duration-700"></i>
                 <div class="text-left leading-none">
-                    <span class="block text-[9px] font-bold text-slate-400 group-hover:text-white/80 uppercase tracking-wider">Agente</span>
+                    <span class="block text-[9px] font-bold text-slate-400 group-hover:text-white/80 uppercase tracking-wider">Agente IA</span>
                     <span id="syncText" class="text-xs font-black uppercase tracking-wide">Sincronizar</span>
                 </div>
             </button>
@@ -102,13 +98,8 @@
                 <i class="fa-solid fa-microchip text-4xl text-aero-DEFAULT animate-pulse"></i>
                 <div class="absolute inset-0 border-4 border-aero-DEFAULT/20 rounded-full border-t-aero-DEFAULT animate-spin"></div>
             </div>
-            <h2 class="text-3xl font-black text-slate-900 mb-4">Análise Neural em Andamento</h2>
-            <p id="aiStatusText" class="text-slate-500 font-medium text-lg">Conectando aos satélites de dados...</p>
-            <div class="mt-8 flex justify-center gap-2">
-                <span class="w-3 h-3 bg-slate-200 rounded-full animate-bounce"></span>
-                <span class="w-3 h-3 bg-slate-200 rounded-full animate-bounce delay-100"></span>
-                <span class="w-3 h-3 bg-slate-200 rounded-full animate-bounce delay-200"></span>
-            </div>
+            <h2 class="text-3xl font-black text-slate-900 mb-4">Negociando com Satélites de Dados...</h2>
+            <p id="aiStatusText" class="text-slate-500 font-medium text-lg">Gerenciando taxa de requisição (Rate Limit Handler)...</p>
         </div>
     </div>
 
@@ -117,12 +108,12 @@
         
         <!-- Dashboard Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-            <!-- Chart 1 -->
+            <!-- Timeline Chart -->
             <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col h-[420px]">
                 <div class="flex justify-between items-start mb-6">
                     <div>
                         <h3 class="text-sm font-black text-slate-800 uppercase tracking-wide">Densidade Temporal</h3>
-                        <p class="text-[10px] text-slate-400 font-bold uppercase">Volume de eventos (Jan 2026)</p>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase">Eventos por dia (Jan 2026)</p>
                     </div>
                     <span class="px-3 py-1 bg-slate-50 rounded-lg text-[10px] font-black text-slate-400">TIMELINE</span>
                 </div>
@@ -131,7 +122,7 @@
                 </div>
             </div>
 
-            <!-- Chart 2 -->
+            <!-- Strategic Matrix -->
             <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm flex flex-col h-[420px]">
                 <div class="flex justify-between items-start mb-6">
                     <div>
@@ -177,7 +168,7 @@
     <div id="configModal" class="hidden fixed inset-0 z-[70] bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl animate-fade-in">
             <h3 class="text-xl font-black text-slate-900 mb-4">Configuração do Agente</h3>
-            <p class="text-sm text-slate-500 mb-6 text-justify">Para habilitar a busca em tempo real, insira sua chave API do Google Gemini. Ela será salva apenas no seu navegador.</p>
+            <p class="text-sm text-slate-500 mb-6 text-justify">Para habilitar a busca, insira sua chave API do Google Gemini. Se der erro 429, aguarde alguns minutos e tente novamente.</p>
             <input type="password" id="apiKeyInput" placeholder="Cole sua API Key aqui..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm mb-4 focus:ring-2 focus:ring-aero-DEFAULT outline-none">
             <div class="flex gap-3">
                 <button onclick="saveConfig()" class="flex-1 bg-slate-900 text-white py-3 rounded-xl font-bold text-sm hover:bg-aero-DEFAULT transition-colors">Salvar e Ativar</button>
@@ -224,53 +215,52 @@
         </div>
     </div>
 
+    <!-- JAVASCRIPT LOGIC -->
     <script>
-        // --- 1. DADOS ORIGINAIS (14 ITENS - TEXTOS COMPLETOS) ---
+        // --- 1. BASE DE DADOS INICIAL (14 ITENS) ---
         const initialData = [
-            { id: 1, title: "Nota Oficial: Anomalia e Perda Total do Aldebaran-I", sector: "aero", scope: "national", date: "12/01/2026", impact: 10, readiness: 1, source: "AEB", url: "https://www.gov.br/aeb/pt-br/assuntos/noticias/nota-oficial-aldebaran-i", p1: "A Agência Espacial Brasileira (AEB) emitiu uma Nota Oficial em 12 de janeiro de 2026 confirmando que a missão do nanossatélite Aldebaran-I resultou em perda total de hardware. O foguete indiano PSLV-C62, responsável pelo lançamento, apresentou uma anomalia técnica crítica em seu terceiro estágio, impedindo que o veículo atingisse a órbita nominal planejada. Como resultado direto desta falha no sistema de propulsão superior, os 16 satélites que integravam a missão foram dados como perdidos, afetando operadoras de diversos países que buscavam validação tecnológica nesta janela orbital.", p2: "Além do Aldebaran-I, projeto pioneiro desenvolvido pela Universidade Federal do Maranhão (UFMA), outros quatro satélites de desenvolvedores nacionais foram afetados pela mesma anomalia, representando um revés temporário para os cronogramas de sensoriamento marítimo do país. A agência espacial indiana (ISRO) já iniciou o processamento completo dos dados de telemetria para identificar a causa raiz da falha de ignição no estágio superior, enquanto as equipes brasileiras analisam o impacto técnico imediato nos seus modelos de engenharia futuros. O incidente representa um desafio logístico significativo, uma vez que o monitoramento costeiro nacional dependia da inserção bem-sucedida desses ativos orbitais educativos e práticos.", p3: "Apesar do desfecho material desfavorável, a AEB enfatizou que o processo de design, construção e integração do Aldebaran-I validou competências técnicas fundamentais das instituições envolvidas, demonstrando a maturidade da engenharia nacional. O incidente é tratado estrategicamente como parte da curva de aprendizado inerente ao setor aeroespacial, que exige resiliência técnica e política diante de falhas de lançadores internacionais. O foco institucional agora se volta para a investigação conjunta com os parceiros indianos e para a identificação de novas janelas de oportunidade para os modelos remanescentes, reafirmando o compromisso com o desenvolvimento da infraestrutura de dados soberana do Brasil através de nanossatélites." },
-            { id: 2, title: "Estudantes do DF: Projeto de Satélite Acadêmico", sector: "aero", scope: "national", date: "09/01/2026", impact: 8, readiness: 9, source: "G1", url: "https://g1.globo.com", p1: "Um grupo de 30 estudantes do ensino médio do Distrito Federal vivenciou a experiência prática de ver o resultado de meses de estudo ganhar contornos de uma missão espacial real no início de janeiro. Alunos de 16 escolas públicas e privadas da capital federal participaram ativamente de cada detalhe do desenvolvimento de um nanossatélite destinado a um lançamento na Índia, inicialmente previsto para o dia 12 de janeiro de 2026. O projeto faz parte do programa 'Desafio Espacial', idealizado pela startup Ideia Space, que busca transformar o aprendizado de STEM em uma jornada tangível e profissional de engenharia espacial prática para jovens cientistas.", p2: "Diferente de simulações teóricas realizadas em sala de aula, os jovens colocaram a mão na massa em todas as etapas críticas do hardware, desde a programação lógica de subsistemas até a definição dos objetivos científicos da missão de monitoramento ambiental e preservação de biomas. Eles foram responsáveis diretos pela execução de testes de validação, compreendendo a complexidade técnica e a extrema importância da precisão absoluta exigida pela indústria aeroespacial global. Contudo, o artefato educacional acabou sendo uma das cargas perdidas na anomalia do foguete indiano PSLV-C62 ocorrida logo após a decolagem, conforme relatórios técnicos de telemetria fornecidos pela agência ISRO.", p3: "Embora o hardware final não tenha atingido a órbita terrestre, o projeto deixou um legado educacional e estratégico inestimável para o Distrito Federal, integrando esforços de instituições de prestígio como o IBICT e diversas universidades federais. O nanossatélite tinha funções práticas vitais previstas, como a detecção precoce de focos de incêndio florestal e a coleta de dados para otimização do agronegócio regional, visando fortalecer a base de inteligência orbital brasileira. A Secretaria de Educação e parceiros destacaram que a trajetória pedagógica completa fornece uma compreensão realista sobre os desafios do setor, preparando esses jovens talentos para ocuparem carreiras estratégicas no futuro da tecnologia aeroespacial brasileira." },
-            { id: 3, title: "NASA Artemis 2: Rumo à Janela de Fevereiro", sector: "aero", scope: "international", date: "12/01/2026", impact: 10, readiness: 9, source: "SpaceNews", url: "https://spacenews.com", p1: "A NASA confirmou em comunicado oficial neste início de janeiro de 2026 que continua trabalhando em ritmo acelerado nas instalações do Centro Espacial Kennedy para viabilizar o lançamento histórico da missão Artemis 2 em fevereiro deste ano. Esta missão representa o pilar central de todo o programa de retorno à Lua, sendo a primeira a levar uma tripulação humana — incluindo a primeira mulher e o primeiro astronauta negro — para orbitar o satélite natural desde 1972. Atualmente, os esforços estão concentrados na integração final do massivo foguete Space Launch System (SLS) com a cápsula Orion, garantindo que cada interface técnica esteja nominal.", p2: "Relatórios operacionais indicam que as equipes de engenharia estão realizando baterias exaustivas de testes de redundância nos sistemas de suporte à vida e verificações detalhadas no escudo térmico, visando mitigar riscos observados em missões automáticas anteriores. Embora a agência monitore janelas de lançamento curtas de aproximadamente oito dias por mês devido à mecânica orbital, o progresso alcançado na primeira quinzena de janeiro reforça a confiança na janela de fevereiro. A segurança absoluta da tripulação permanece como o parâmetro soberano para a autorização da decolagem lunar, exigindo uma validação rigorosa de cada sensor crítico antes do início da contagem regressiva oficial.", p3: "O sucesso da missão Artemis 2 validará as tecnologias de voo de longa duração e comunicação em espaço profundo necessárias para o pouso efetivo na superfície lunar planejado para a Artemis 3 no próximo ano. A missão testará não apenas a integridade do hardware sob estresse térmico extremo, mas também a resiliência humana em trajetórias complexas fora da órbita terrestre baixa, consolidando a liderança dos EUA na nova era de exploração planetária. O mundo aeroespacial acompanha atentamente cada contagem regressiva técnica na Flórida, ciente de que esta etapa redefinirá os limites da presença humana sustentável no sistema solar por décadas." },
-            // ... (Inserir aqui as outras 11 notícias com os textos completos conforme o histórico v4.0/4.5) ...
-            // Para brevidade do código, incluí as 3 primeiras completas como modelo. O script irá renderizar todas se estiverem no array.
-            // Vou popular com o restante dos dados essenciais para o funcionamento correto.
-            { id: 4, title: "ESA: Estratégia Marte e Autonomia Tecnológica", sector: "aero", scope: "international", date: "05/01/2026", impact: 9, readiness: 7, source: "Aerospace America", url: "https://aerospaceamerica.aiaa.org", p1: "A ESA iniciou 2026 reavaliando a missão ExoMars para garantir autonomia tecnológica...", p2: "O ano é 'mission-dense' para a Europa...", p3: "Analistas apontam que a capacidade de adaptação..." },
-            { id: 5, title: "NASA Pandora: CubeSats para Atmosferas", sector: "aero", scope: "international", date: "10/01/2026", impact: 8, readiness: 8, source: "NASA Science", url: "https://science.nasa.gov", p1: "A missão Pandora usa CubeSats para estudar exoplanetas...", p2: "Tecnologia de espectroscopia avançada...", p3: "Democratização da ciência espacial..." },
-            { id: 6, title: "Marinha: Operação Aspirantex 2026", sector: "defense", scope: "national", date: "12/01/2026", impact: 7, readiness: 10, source: "Marinha", url: "https://marinha.mil.br", p1: "Início da Aspirantex com 2.400 militares...", p2: "Exercícios de tiro e manobras táticas...", p3: "Reforço da soberania na Amazônia Azul..." },
-            { id: 7, title: "Uruguai: Recebimento de Super Tucanos", sector: "aero", scope: "international", date: "12/01/2026", impact: 9, readiness: 10, source: "Embraer", url: "https://embraer.com", p1: "Entrega dos primeiros A-29 ao Uruguai...", p2: "Suporte logístico e treinamento...", p3: "Consolidação da liderança brasileira..." },
-            { id: 8, title: "Alistamento 2026: Vagas Femininas", sector: "defense", scope: "national", date: "01/01/2026", impact: 6, readiness: 10, source: "Defesa", url: "https://gov.br/defesa", p1: "Início do alistamento com foco em mulheres...", p2: "1.467 vagas voluntárias...", p3: "Modernização do sistema digital..." },
-            { id: 9, title: "NATO: Segurança Compartilhada", sector: "defense", scope: "international", date: "13/01/2026", impact: 9, readiness: 9, source: "NATO", url: "https://nato.int", p1: "Conferência sobre ameaças híbridas...", p2: "Investimento em defesa aérea...", p3: "Definição de orçamentos 2026-2027..." },
-            { id: 10, title: "AEB: Programa Incuba Espaço", sector: "aero", scope: "national", date: "12/01/2026", impact: 6, readiness: 8, source: "AEB", url: "https://gov.br/aeb", p1: "Lançamento do programa para startups...", p2: "Foco em agricultura e gestão urbana...", p3: "Redução da dependência tecnológica..." },
-            { id: 11, title: "FAB: Concurso EAGS 2026", sector: "defense", scope: "national", date: "08/01/2026", impact: 5, readiness: 10, source: "FAB", url: "https://fab.mil.br", p1: "Inscrições abertas para sargentos especialistas...", p2: "Formação técnica na EEAR...", p3: "Renovação dos quadros técnicos..." },
-            { id: 12, title: "Embraer e Mahindra: Acordo Índia", sector: "aero", scope: "international", date: "12/01/2026", impact: 10, readiness: 7, source: "InfoMoney", url: "https://infomoney.com.br", p1: "Negociações para fabricar C-390 na Índia...", p2: "Programa Make in India...", p3: "Expansão da base industrial..." },
-            { id: 13, title: "US Navy: Apreensão no Mar Vermelho", sector: "defense", scope: "international", date: "07/01/2026", impact: 8, readiness: 10, source: "Reuters", url: "https://reuters.com", p1: "Interceptação de navios violando sanções...", p2: "Vigilância intensificada...", p3: "Repercussões diplomáticas..." },
-            { id: 14, title: "SpaceX: Missão Pandora", sector: "aero", scope: "international", date: "11/01/2026", impact: 7, readiness: 10, source: "SpaceX", url: "https://spacex.com", p1: "Sucesso no lançamento rideshare...", p2: "Democratização do acesso...", p3: "Liderança no mercado..." }
+            { id: 1, title: "Nota Oficial: Anomalia e Perda Total do Aldebaran-I", sector: "aero", scope: "national", date: "12/01/2026", impact: 10, readiness: 1, source: "AEB", url: "https://www.gov.br/aeb", p1: "A Agência Espacial Brasileira (AEB) confirmou em 12 de janeiro a perda total do nanossatélite Aldebaran-I. O foguete indiano PSLV-C62 sofreu uma anomalia crítica no terceiro estágio, impedindo a inserção orbital.", p2: "O incidente resultou na perda de 16 satélites, incluindo 5 brasileiros. A AEB e a ISRO investigam falhas no sistema de ignição superior. O monitoramento costeiro nacional sofrerá atrasos estratégicos.", p3: "Apesar do revés, a AEB destaca a validação dos processos de engenharia nacionais. O foco agora é buscar novos lançadores para os modelos de engenharia remanescentes, mantendo o programa de soberania de dados." },
+            { id: 2, title: "Estudantes do DF: Satélite Perdido na Índia", sector: "aero", scope: "national", date: "09/01/2026", impact: 8, readiness: 9, source: "G1", url: "https://g1.globo.com", p1: "Alunos de 16 escolas do DF viram seu satélite educacional ser perdido na falha do foguete indiano. O projeto visava democratizar o acesso ao espaço para jovens cientistas.", p2: "Os estudantes participaram de todo o ciclo de engenharia, programando subsistemas reais. O hardware estava a bordo do voo PSLV-C62 que falhou em atingir a órbita em 12 de janeiro.", p3: "O legado pedagógico permanece. A Secretaria de Educação manterá o programa, utilizando a experiência de falha real como aprendizado sobre a complexidade e risco do setor aeroespacial." },
+            { id: 3, title: "Artemis 2: NASA Confirma Janela de Fevereiro", sector: "aero", scope: "international", date: "12/01/2026", impact: 10, readiness: 9, source: "SpaceNews", url: "https://spacenews.com", p1: "A NASA reafirmou o lançamento da Artemis 2 para fevereiro de 2026. Será a primeira missão tripulada a orbitar a Lua no século XXI, testando os limites da cápsula Orion.", p2: "Testes finais de redundância no Centro Kennedy mostram estabilidade nos sistemas de suporte à vida. A segurança da tripulação é o foco absoluto antes da contagem regressiva final.", p3: "O sucesso validará tecnologias para o pouso da Artemis 3. O mundo observa atentamente, pois esta missão redefine a presença humana no espaço profundo." },
+            { id: 4, title: "ESA: Reavaliação da Missão ExoMars", sector: "aero", scope: "international", date: "05/01/2026", impact: 9, readiness: 7, source: "Aerospace America", url: "https://aerospaceamerica.aiaa.org", p1: "A ESA iniciou 2026 reestruturando a missão ExoMars para garantir autonomia tecnológica. Novos sistemas de pouso europeus estão sendo desenvolvidos para substituir parcerias anteriores.", p2: "O ano é 'mission-dense' para a Europa, com foco em satélites climáticos e de segurança. A logística em Kourou está operando em capacidade máxima para atender à demanda.", p3: "A capacidade de adaptação definirá a relevância da ESA na década. A busca por soberania em componentes críticos é a nova diretriz estratégica do continente." },
+            { id: 5, title: "NASA Pandora: Ciência com CubeSats", sector: "aero", scope: "international", date: "10/01/2026", impact: 8, readiness: 8, source: "NASA Science", url: "https://science.nasa.gov", p1: "A missão Pandora usa CubeSats para estudar atmosferas de exoplanetas. O foco é entender como a atividade estelar afeta a habitabilidade em sistemas vizinhos.", p2: "Espectroscopia avançada em satélites pequenos permite diferenciar sinais atmosféricos de ruído estelar. É um avanço na ciência de alta precisão com baixo custo.", p3: "O lançamento em 2026 prova que o 'New Space' atingiu a ciência fundamental. A NASA expandirá o uso de plataformas modulares para astrofísica." },
+            { id: 6, title: "Marinha: Início da Operação Aspirantex 2026", sector: "defense", scope: "national", date: "12/01/2026", impact: 7, readiness: 10, source: "Marinha do Brasil", url: "https://marinha.mil.br", p1: "A Marinha iniciou a Aspirantex 2026 com 2.400 militares. A missão adestra aspirantes e testa a prontidão da esquadra entre o Sudeste e Nordeste brasileiro.", p2: "Exercícios de tiro e manobras táticas validam sistemas de combate. A operação é vital para a formação da nova geração de oficiais da Armada.", p3: "A presença naval reforça a soberania na Amazônia Azul. Os resultados aprimoram a doutrina de defesa frente a ameaças contemporâneas." },
+            { id: 7, title: "Uruguai: Chegada dos Super Tucanos", sector: "aero", scope: "international", date: "12/01/2026", impact: 9, readiness: 10, source: "Embraer", url: "https://embraer.com", p1: "A Embraer entregou os primeiros A-29 Super Tucano ao Uruguai. A frota moderniza a defesa aérea do país para combate ao tráfego ilícito.", p2: "O contrato inclui treinamento e suporte logístico integrado. A interoperabilidade regional é fortalecida com a adoção de plataformas brasileiras.", p3: "O Brasil consolida liderança na exportação de defesa na América Latina. O Uruguai ganha capacidade real de policiamento do espaço aéreo." },
+            { id: 8, title: "Alistamento 2026: Foco em Mulheres", sector: "defense", scope: "national", date: "01/01/2026", impact: 6, readiness: 10, source: "Defesa", url: "https://gov.br/defesa", p1: "Começou o alistamento 2026 com destaque para vagas voluntárias femininas. As Forças Armadas buscam ampliar a representatividade em áreas técnicas.", p2: "O processo é digital e obrigatório para homens de 18 anos. As mulheres têm 1.467 vagas específicas em especialidades operacionais.", p3: "A modernização do sistema garante agilidade na mobilização. O serviço militar continua sendo uma ferramenta vital de formação cívica." },
+            { id: 9, title: "NATO: Conferência de Segurança em Bruxelas", sector: "defense", scope: "international", date: "13/01/2026", impact: 9, readiness: 9, source: "NATO News", url: "https://nato.int", p1: "Mark Rutte liderou discussões sobre ameaças híbridas no Parlamento Europeu. A modernização militar é a prioridade da aliança para 2026.", p2: "Foco em defesa aérea integrada e proteção de infraestruturas críticas. A cooperação OTAN-UE é vista como pilar da estabilidade global.", p3: "Decisões moldarão os orçamentos de defesa do biênio. A proteção contra sabotagem e ciberataques é a nova linha de frente." },
+            { id: 10, title: "AEB: Programa Incuba Espaço", sector: "aero", scope: "national", date: "12/01/2026", impact: 6, readiness: 8, source: "AEB", url: "https://gov.br/aeb", p1: "AEB lançou o 'Incuba Espaço' para startups de dados orbitais. O objetivo é fomentar soluções nacionais para agricultura e gestão urbana.", p2: "Startups terão mentoria e acesso a laboratórios. A iniciativa busca reduzir dependência de tecnologia estrangeira no processamento de dados.", p3: "O programa catalisa o ecossistema 'New Space' brasileiro. Espera-se gerar inovação aplicável à economia real ainda este ano." },
+            { id: 11, title: "FAB: Concurso EAGS 2026 Aberto", sector: "defense", scope: "national", date: "08/01/2026", impact: 5, readiness: 10, source: "FAB", url: "https://fab.mil.br", p1: "Inscrições abertas para o EAGS 2026 da Aeronáutica. O concurso seleciona sargentos especialistas em eletrônica, enfermagem e administração.", p2: "Formação na EEAR em Guaratinguetá é referência técnica. O processo é vital para manter a prontidão operacional das bases aéreas.", p3: "A FAB busca renovar quadros com profissionais técnicos de alta capacidade. O concurso é um dos mais concorridos do setor de defesa." },
+            { id: 12, title: "Embraer e Mahindra: C-390 na Índia", sector: "aero", scope: "international", date: "12/01/2026", impact: 10, readiness: 7, source: "InfoMoney", url: "https://infomoney.com.br", p1: "Embraer avança em acordo com Mahindra para fabricar o C-390 na Índia. O projeto visa substituir a frota de transporte tático indiana.", p2: "Foco no programa 'Make in India' com transferência de tecnologia. O C-390 superou concorrentes em testes de pista rústica.", p3: "Expansão agressiva da base industrial brasileira na Ásia. O contrato pode garantir décadas de produção e relevância geopolítica." },
+            { id: 13, title: "US Navy: Apreensão no Mar Vermelho", sector: "defense", scope: "international", date: "07/01/2026", impact: 8, readiness: 10, source: "Reuters", url: "https://reuters.com", p1: "Marinha dos EUA apreendeu navios violando sanções comerciais. Ação visa cortar financiamento de instabilidades regionais.", p2: "Vigilância intensificada em rotas estratégicas. A operação foi rápida e sem resistência, mas elevou alertas de segurança.", p3: "Demonstração de força no controle de corredores marítimos. O cumprimento do direito internacional permanece como prioridade naval." },
+            { id: 14, title: "SpaceX: Missão Pandora (Rideshare)", sector: "aero", scope: "international", date: "11/01/2026", impact: 7, readiness: 10, source: "SpaceX", url: "https://spacex.com", p1: "Sucesso no lançamento da missão Pandora com Falcon 9. Dezenas de pequenos satélites colocados em órbita para clientes globais.", p2: "Rideshare democratiza o acesso ao espaço com custos reduzidos. Todos os artefatos reportaram telemetria nominal após separação.", p3: "SpaceX mantém liderança com reuso eficiente. Cronograma de 2026 segue intenso com foco em constelações comerciais." }
         ];
 
-        // --- ESTADO ---
+        // --- STATE MANAGEMENT ---
         let appData = [...initialData];
-        let rejectedIds = [];
-        let state = { sector: 'all', search: '', isSyncing: false };
+        let rejectedTags = [];
+        let currentFilter = { sector: 'all', search: '' };
         let charts = { timeline: null, matrix: null };
 
-        // --- FUNÇÕES DE API ---
+        // --- CORE FUNCTIONS ---
         function getApiKey() {
             return localStorage.getItem('gemini_api_key') || '';
         }
 
         function openConfig() {
-            const modal = document.getElementById('configModal');
+            document.getElementById('configModal').classList.remove('hidden');
+            document.getElementById('configModal').classList.add('flex');
             document.getElementById('apiKeyInput').value = getApiKey();
-            modal.classList.remove('hidden');
         }
 
         function saveConfig() {
             const key = document.getElementById('apiKeyInput').value.trim();
             if(key) {
                 localStorage.setItem('gemini_api_key', key);
-                alert("Chave salva com segurança!");
+                alert("Chave API salva com sucesso!");
                 document.getElementById('configModal').classList.add('hidden');
+                document.getElementById('configModal').classList.remove('flex');
             } else {
-                alert("Por favor, insira uma chave válida.");
+                alert("Insira uma chave válida.");
             }
         }
 
@@ -281,179 +271,197 @@
                 return;
             }
 
-            if (state.isSyncing) return;
+            const btn = document.getElementById('syncBtn');
+            const overlay = document.getElementById('aiOverlay');
             
-            // UI Update
-            state.isSyncing = true;
-            document.getElementById('aiOverlay').classList.remove('hidden');
-            
+            // UI State
+            btn.disabled = true;
+            overlay.classList.remove('hidden');
+            overlay.classList.add('flex');
+
             try {
-                // Preparar contexto para a IA
                 const knownTitles = appData.map(d => d.title).join("; ");
                 
                 const prompt = `
-                    Atue como um analista de inteligência sênior.
-                    Busque 2 novas notícias REAIS e VERIFICÁVEIS sobre Aeroespacial ou Defesa de JANEIRO DE 2026.
-                    NÃO repita estas notícias: ${knownTitles}.
-                    Para cada notícia, gere um JSON com:
-                    title, sector (aero/defense), scope (national/international), date (DD/MM/2026), 
-                    source, url, summary, p1 (Contexto - min 60 palavras), p2 (Detalhes Técnicos - min 60 palavras), p3 (Impacto Estratégico - min 60 palavras),
-                    impact (1-10), readiness (1-10).
-                    Retorne APENAS o JSON array.
+                    Atue como analista sênior. Busque 2 novas notícias VERIFICÁVEIS de JANEIRO 2026 (Aero/Defesa).
+                    IGNORE: ${knownTitles}.
+                    JSON ONLY:
+                    [{
+                        "title": "...", "sector": "aero|defense", "scope": "national|international", 
+                        "date": "DD/MM/2026", "source": "...", "url": "...", "summary": "...", 
+                        "p1": "Contexto (60 words)", "p2": "Técnico (60 words)", "p3": "Impacto (60 words)", 
+                        "impact": 1-10, "readiness": 1-10
+                    }]
                 `;
 
-                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        contents: [{ parts: [{ text: prompt }] }],
-                        tools: [{ google_search: {} }] 
-                    })
-                });
+                // IMPLEMENTAÇÃO DE RETRY PARA CORRIGIR ERRO 429
+                let response;
+                let retries = 3;
+                let delay = 2000;
 
-                if (!response.ok) throw new Error("Falha na API: " + response.status);
+                while(retries > 0) {
+                    try {
+                        response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`, {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({
+                                contents: [{ parts: [{ text: prompt }] }],
+                                tools: [{ google_search: {} }] 
+                            })
+                        });
+
+                        if (response.status === 429) throw new Error("429");
+                        if (!response.ok) throw new Error("API Error: " + response.status);
+                        break; // Sucesso
+
+                    } catch (e) {
+                        if (e.message === "429") {
+                            console.warn("Rate limit. Retrying in " + delay + "ms");
+                            await new Promise(r => setTimeout(r, delay));
+                            delay *= 2; // Exponential backoff
+                            retries--;
+                        } else {
+                            throw e;
+                        }
+                    }
+                }
+
+                if (!response) throw new Error("Falha na conexão após retentativas.");
 
                 const data = await response.json();
                 let text = data.candidates[0].content.parts[0].text;
-                
-                // Limpeza do JSON (caso a IA mande markdown)
                 text = text.replace(/```json/g, '').replace(/```/g, '').trim();
-                
                 const newItems = JSON.parse(text);
                 
-                // Integração
                 let addedCount = 0;
                 newItems.forEach(item => {
-                    item.id = Date.now() + Math.random();
-                    appData.push(item);
-                    addedCount++;
+                    if (!appData.some(d => d.title === item.title)) {
+                        item.id = Date.now() + Math.random();
+                        appData.push(item);
+                        addedCount++;
+                    }
                 });
 
-                showToast(`${addedCount} novos sinais de inteligência interceptados.`);
+                if(addedCount > 0) alert(`${addedCount} novos relatórios integrados.`);
+                else alert("Nenhum fato novo relevante encontrado no momento.");
 
             } catch (error) {
                 console.error(error);
-                alert("Erro na sincronização: " + error.message);
+                if(error.message.includes("429")) {
+                    alert("Limite de uso da API excedido. Aguarde 1 minuto e tente novamente.");
+                } else {
+                    alert("Erro: " + error.message);
+                }
             } finally {
-                state.isSyncing = false;
-                document.getElementById('aiOverlay').classList.add('hidden');
+                btn.disabled = false;
+                overlay.classList.add('hidden');
+                overlay.classList.remove('flex');
                 renderFeed();
                 updateCharts();
             }
         }
 
-        // --- RENDERIZAÇÃO ---
-        function renderFeed() {
-            const grid = document.getElementById('newsGrid');
-            const filtered = appData.filter(d => {
-                if (rejectedIds.includes(d.id)) return false;
-                const matchSec = state.sector === 'all' || d.sector === state.sector;
-                const searchStr = (d.title + d.source + d.summary).toLowerCase();
-                return matchSec && searchStr.includes(state.search);
-            });
-
-            if (filtered.length === 0) {
-                document.getElementById('emptyState').classList.remove('hidden');
-                document.getElementById('emptyState').classList.add('flex');
-                grid.innerHTML = '';
-                return;
-            }
-
-            document.getElementById('emptyState').classList.add('hidden');
-            document.getElementById('emptyState').classList.remove('flex');
-
-            grid.innerHTML = filtered.sort((a,b) => new Date(b.date.split('/').reverse().join('-')) - new Date(a.date.split('/').reverse().join('-'))).map(item => `
-                <div onclick="openModal(${item.id})" class="pro-card p-8 cursor-pointer group animate-fade-in">
-                    <button onclick="event.stopPropagation(); rejectItem(${item.id})" class="absolute top-4 right-4 text-slate-300 hover:text-red-500 transition-colors z-10" title="Marcar como Irrelevante">
-                        <i class="fa-solid fa-ban"></i>
-                    </button>
-                    <div class="flex items-center gap-3 mb-6">
-                        <span class="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded ${item.sector === 'aero' ? 'bg-aero-surface text-aero-DEFAULT' : 'bg-lime-50 text-def-DEFAULT'}">
-                            ${item.sector === 'aero' ? 'AERO' : 'DEFESA'}
-                        </span>
-                        <span class="text-[10px] font-bold text-slate-400 font-mono">${item.date}</span>
-                    </div>
-                    <h3 class="text-lg font-black text-slate-900 leading-tight mb-4 group-hover:text-aero-DEFAULT transition-colors">
-                        ${item.title}
-                    </h3>
-                    <p class="text-xs text-slate-500 font-medium leading-relaxed line-clamp-3">
-                        ${item.summary || item.p1.substring(0, 120) + '...'}
-                    </p>
-                    <div class="mt-6 pt-4 border-t border-slate-50 flex justify-between items-center">
-                        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">${item.source}</span>
-                        <i class="fa-solid fa-arrow-right text-slate-300 group-hover:text-aero-DEFAULT group-hover:translate-x-1 transition-transform"></i>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // --- FUNÇÕES DE SUPORTE ---
-        function filterData(sec) {
-            state.sector = sec;
+        // --- FILTROS E RENDERIZAÇÃO ---
+        function filterData(type) {
+            currentFilter.sector = type;
             ['all', 'aero', 'defense'].forEach(t => {
                 const btn = document.getElementById(`tab-${t}`);
-                if (t === sec) {
-                    btn.className = "flex-1 md:flex-none px-8 py-3 rounded-xl text-xs font-black transition-all bg-slate-900 text-white shadow-lg transform scale-105";
+                if(type === t) {
+                    btn.className = "flex-1 md:flex-none px-6 py-2 rounded-lg text-xs font-bold transition-all bg-slate-900 text-white shadow-md transform scale-105";
                 } else {
-                    btn.className = "flex-1 md:flex-none px-8 py-3 rounded-xl text-xs font-black transition-all text-slate-500 hover:text-slate-900";
+                    btn.className = `flex-1 md:flex-none px-6 py-2 rounded-lg text-xs font-bold transition-all text-slate-500 hover:text-${t === 'all' ? 'slate-900' : (t === 'aero' ? 'aero-DEFAULT' : 'def-DEFAULT')}`;
                 }
             });
             renderFeed();
             updateCharts();
         }
 
-        function rejectItem(id) {
-            rejectedIds.push(id);
-            renderFeed();
-            updateCharts();
-        }
-
-        function openModal(id) {
-            const item = appData.find(d => d.id === id);
-            if (!item) return;
-
-            const m = document.getElementById('newsModal');
-            document.getElementById('modalTitle').innerText = item.title;
-            document.getElementById('modalSector').innerText = item.sector === 'aero' ? 'AEROESPACIAL' : 'DEFESA';
-            document.getElementById('modalSector').className = `px-4 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-widest border ${item.sector === 'aero' ? 'border-aero-DEFAULT text-aero-DEFAULT' : 'border-def-DEFAULT text-def-DEFAULT'}`;
-            document.getElementById('modalScope').innerText = item.scope === 'national' ? 'NACIONAL' : 'INTERNACIONAL';
+        function renderFeed() {
+            const grid = document.getElementById('newsGrid');
+            const empty = document.getElementById('emptyState');
             
-            document.getElementById('modalBody').innerHTML = `
-                <p>${item.p1}</p>
-                <p>${item.p2}</p>
-                <p>${item.p3}</p>
-            `;
-            
-            document.getElementById('modalSource').innerText = item.source;
-            document.getElementById('modalDate').innerText = item.date;
-            document.getElementById('modalLink').href = item.url;
-            
-            // QR Code
-            const qrBox = document.getElementById('qrcode');
-            qrBox.innerHTML = '';
-            new QRCode(qrBox, {
-                text: item.url,
-                width: 120,
-                height: 120,
-                colorDark : "#0f172a",
-                colorLight : "#ffffff",
-                correctLevel : QRCode.CorrectLevel.H
+            const filtered = appData.filter(item => {
+                const matchSector = currentFilter.sector === 'all' || item.sector === currentFilter.sector;
+                const matchSearch = (item.title + item.source).toLowerCase().includes(currentFilter.search);
+                const isRejected = rejectedTags.some(tag => item.title.includes(tag));
+                return matchSector && matchSearch && !isRejected;
             });
 
-            m.classList.remove('hidden');
-            m.classList.add('flex');
-            document.body.style.overflow = 'hidden';
+            document.getElementById('dbCounter').innerText = `${filtered.length} Registros Ativos`;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                empty.classList.remove('hidden');
+                empty.classList.add('flex');
+                return;
+            }
+
+            empty.classList.add('hidden');
+            empty.classList.remove('flex');
+
+            // Ordenação Cronológica Reversa
+            filtered.sort((a,b) => {
+                const dateA = new Date(a.date.split('/').reverse().join('-'));
+                const dateB = new Date(b.date.split('/').reverse().join('-'));
+                return dateB - dateA;
+            });
+
+            grid.innerHTML = filtered.map(item => `
+                <div onclick="openModal(${item.id})" class="pro-card ${item.sector === 'aero' ? 'aero' : 'defense'} p-6 cursor-pointer group">
+                    <button onclick="event.stopPropagation(); rejectItem(${item.id})" class="absolute top-4 right-4 text-slate-300 hover:text-red-500 transition-colors z-10 p-2">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                    <div class="flex justify-between items-start mb-4 pl-3">
+                        <span class="text-[10px] font-black uppercase tracking-wider px-2 py-1 rounded ${item.sector === 'aero' ? 'bg-aero-surface text-aero-dark' : 'bg-lime-50 text-def-dark'}">
+                            ${item.sector === 'aero' ? 'AERO' : 'DEFESA'}
+                        </span>
+                        <span class="text-[10px] font-mono text-slate-400 mr-6">${item.date}</span>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 leading-tight mb-3 group-hover:text-aero-DEFAULT transition-colors pl-3 pr-4">${item.title}</h3>
+                    <p class="text-xs text-slate-500 font-medium line-clamp-3 pl-3 mb-6 leading-relaxed">${item.p1.substring(0, 140)}...</p>
+                    <div class="mt-auto pl-3 pt-4 border-t border-slate-50 flex justify-between items-center">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase">${item.source}</span>
+                        <i class="fa-solid fa-arrow-right text-slate-300 group-hover:text-aero-DEFAULT group-hover:translate-x-1 transition-all"></i>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function closeModal() {
-            document.getElementById('newsModal').classList.add('hidden');
-            document.getElementById('newsModal').classList.remove('flex');
-            document.body.style.overflow = 'auto';
+        function rejectItem(id) {
+            const item = appData.find(i => i.id === id);
+            if(item) {
+                rejectedTags.push(item.title.split(' ')[0]);
+                appData = appData.filter(i => i.id !== id);
+                renderFeed();
+                updateCharts();
+            }
         }
 
-        // --- CHARTS ---
+        // --- CHARTS LOGIC (Fixed Sorting) ---
+        function getTimelineData() {
+            const counts = {};
+            appData.forEach(d => {
+                const day = parseInt(d.date.split('/')[0], 10); // Parse as int for sorting
+                counts[day] = (counts[day] || 0) + 1;
+            });
+            
+            // Sort keys numerically
+            const sortedDays = Object.keys(counts).map(Number).sort((a,b) => a - b);
+            
+            return {
+                labels: sortedDays.map(d => `Dia ${d}`),
+                datasets: [{
+                    data: sortedDays.map(d => counts[d]),
+                    backgroundColor: '#0284c7',
+                    borderRadius: 4,
+                    barThickness: 12
+                }]
+            };
+        }
+
         function initCharts() {
-            // Timeline Chart
+            // Timeline
+            if(charts.timeline) charts.timeline.destroy();
             const ctxT = document.getElementById('timelineChart').getContext('2d');
             charts.timeline = new Chart(ctxT, {
                 type: 'bar',
@@ -463,59 +471,52 @@
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
-                        y: { display: false },
-                        x: { grid: { display: false }, ticks: { font: { family: 'Inter', size: 10 } } }
-                    },
-                    borderRadius: 6
+                        y: { display: false, beginAtZero: true },
+                        x: { grid: { display: false }, ticks: { font: { family: 'Inter', size: 9 } } }
+                    }
                 }
             });
 
-            // Scatter Chart (Plotly)
             updateMatrix();
         }
 
-        function getTimelineData() {
-            const counts = {};
-            appData.filter(d => !rejectedIds.includes(d.id)).forEach(d => {
-                const day = d.date.split('/')[0];
-                counts[day] = (counts[day] || 0) + 1;
-            });
-            const days = Object.keys(counts).sort();
-            return {
-                labels: days.map(d => `Dia ${d}`),
-                datasets: [{
-                    data: days.map(d => counts[d]),
-                    backgroundColor: '#0284c7'
-                }]
-            };
-        }
-
         function updateMatrix() {
-            const validData = appData.filter(d => !rejectedIds.includes(d.id));
-            const trace = {
-                x: validData.map(d => d.readiness),
-                y: validData.map(d => d.impact),
-                text: validData.map(d => d.title),
+            const aeroData = appData.filter(d => d.sector === 'aero');
+            const defData = appData.filter(d => d.sector === 'defense');
+
+            const traceAero = {
+                x: aeroData.map(d => d.readiness),
+                y: aeroData.map(d => d.impact),
+                text: aeroData.map(d => d.title),
                 mode: 'markers',
-                marker: {
-                    size: validData.map(d => d.impact * 2 + 10),
-                    color: validData.map(d => d.sector === 'aero' ? '#0284c7' : '#4d7c0f'),
-                    opacity: 0.8
-                },
-                type: 'scatter'
+                type: 'scatter',
+                name: 'Aero',
+                marker: { size: 14, color: '#0284c7', opacity: 0.7 },
+                hoverinfo: 'text'
             };
-            
+
+            const traceDef = {
+                x: defData.map(d => d.readiness),
+                y: defData.map(d => d.impact),
+                text: defData.map(d => d.title),
+                mode: 'markers',
+                type: 'scatter',
+                name: 'Defesa',
+                marker: { size: 14, color: '#4d7c0f', opacity: 0.7 },
+                hoverinfo: 'text'
+            };
+
             const layout = {
-                margin: { t: 10, r: 10, b: 30, l: 30 },
-                xaxis: { title: 'Maturidade (TRL)', range: [0, 11], gridcolor: '#f1f5f9' },
-                yaxis: { title: 'Impacto', range: [0, 11], gridcolor: '#f1f5f9' },
+                margin: { t: 20, r: 20, b: 40, l: 40 },
+                showlegend: false,
+                xaxis: { title: 'Maturidade (TRL)', range: [0, 11], gridcolor: '#f1f5f9', zeroline: false },
+                yaxis: { title: 'Impacto', range: [0, 11], gridcolor: '#f1f5f9', zeroline: false },
                 paper_bgcolor: 'transparent',
                 plot_bgcolor: 'transparent',
-                showlegend: false,
-                font: { family: 'Inter' }
+                font: { family: 'Inter', size: 10, color: '#64748b' }
             };
-            
-            Plotly.newPlot('strategicMap', [trace], layout, {displayModeBar: false});
+
+            Plotly.newPlot('strategicMap', [traceAero, traceDef], layout, {displayModeBar: false, responsive: true});
         }
 
         function updateCharts() {
@@ -526,19 +527,113 @@
             updateMatrix();
         }
 
-        function showToast(msg) {
-            // Simplificado para alert neste exemplo, ideal seria um toast customizado
-            alert(msg);
+        // --- MODAL FUNCTIONS ---
+        function openModal(id) {
+            const item = appData.find(i => i.id === id);
+            if(!item) return;
+
+            const modal = document.getElementById('newsModal');
+            document.getElementById('modalTitle').innerText = item.title;
+            document.getElementById('modalSector').innerText = item.sector === 'aero' ? 'AEROESPACIAL' : 'DEFESA';
+            document.getElementById('modalSector').className = `px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-widest border ${item.sector === 'aero' ? 'border-aero-light text-aero-dark bg-aero-surface' : 'border-def-light text-def-dark bg-lime-50'}`;
+            document.getElementById('modalScope').innerText = item.scope === 'national' ? 'BRASIL' : 'GLOBAL';
+            
+            document.getElementById('modalBody').innerHTML = `
+                <p>${item.p1}</p>
+                <p>${item.p2}</p>
+                <p>${item.p3}</p>
+            `;
+
+            document.getElementById('modalImpact').innerText = item.impact + "/10";
+            document.getElementById('modalReadiness').innerText = "TRL " + item.readiness;
+            document.getElementById('modalUrl').innerText = item.url;
+            document.getElementById('modalLink').href = item.url;
+
+            // QR Code
+            const qrContainer = document.getElementById('qrcode');
+            qrContainer.innerHTML = '';
+            new QRCode(qrContainer, {
+                text: item.url,
+                width: 100,
+                height: 100,
+                colorDark : "#0f172a",
+                colorLight : "#ffffff",
+                correctLevel : QRCode.CorrectLevel.L
+            });
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                document.querySelector('.modal-overlay').classList.add('active');
+            }, 10);
+            document.body.style.overflow = 'hidden';
         }
 
-        // Init
+        function closeModal() {
+            const modal = document.getElementById('newsModal');
+            document.querySelector('.modal-overlay').classList.remove('active');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }, 300);
+            document.body.style.overflow = 'auto';
+        }
+
+        function openConfig() {
+            document.getElementById('configModal').classList.remove('hidden');
+            document.getElementById('configModal').classList.add('flex');
+            document.getElementById('apiKeyInput').value = getApiKey();
+        }
+
+        function saveConfig() {
+            const key = document.getElementById('apiKeyInput').value.trim();
+            if(key) {
+                localStorage.setItem('gemini_api_key', key);
+                alert("Configuração salva.");
+                document.getElementById('configModal').classList.add('hidden');
+                document.getElementById('configModal').classList.remove('flex');
+            }
+        }
+
+        // --- INIT ---
+        window.addEventListener('DOMContentLoaded', init);
         document.getElementById('searchInput').addEventListener('input', (e) => {
             currentFilter.search = e.target.value.toLowerCase();
             renderFeed();
         });
-        
-        init();
 
     </script>
+
+    <!-- Modais Auxiliares -->
+    <div id="configModal" class="modal-overlay fixed inset-0 z-[70] bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="modal-content bg-white rounded-3xl p-8 max-w-md w-full shadow-2xl">
+            <h3 class="text-xl font-black text-slate-900 mb-4">Configuração API</h3>
+            <p class="text-sm text-slate-500 mb-6">Insira sua chave Gemini API para habilitar a busca neural em tempo real.</p>
+            <input type="password" id="apiKeyInput" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-4 text-sm mb-4 outline-none focus:ring-2 focus:ring-slate-900" placeholder="Cole sua chave aqui...">
+            <div class="flex gap-3">
+                <button onclick="saveConfig()" class="flex-1 bg-slate-900 text-white py-3 rounded-xl font-bold text-sm">Salvar</button>
+                <button onclick="document.getElementById('configModal').classList.add('hidden'); document.getElementById('configModal').classList.remove('flex');" class="px-6 py-3 rounded-xl font-bold text-sm text-slate-500 bg-slate-100">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detalhes (Estrutura) -->
+    <div id="newsModal" class="modal-overlay fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+        <div class="modal-content bg-white w-full h-full max-h-[90vh] rounded-3xl shadow-2xl flex flex-col lg:flex-row overflow-hidden relative">
+            <button onclick="closeModal()" class="absolute top-6 right-6 z-10 w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-900 hover:text-white transition-all"><i class="fa-solid fa-times"></i></button>
+            <div class="flex-1 p-8 lg:p-12 overflow-y-auto">
+                <div class="flex gap-3 mb-6"><span id="modalSector"></span><span id="modalScope"></span></div>
+                <h2 id="modalTitle" class="text-3xl lg:text-4xl font-black text-slate-900 leading-tight mb-8"></h2>
+                <div id="modalBody" class="space-y-6 text-slate-600 text-sm lg:text-base leading-relaxed text-justify font-medium"></div>
+                <div class="mt-12 pt-8 border-t border-slate-100"><p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Impacto</p><div class="flex gap-2"><div class="flex-1 bg-slate-50 p-4 rounded-xl border border-slate-100"><span class="block text-xl font-black text-slate-900" id="modalImpact"></span><span class="text-[10px] text-slate-400 font-bold uppercase">Nível</span></div><div class="flex-1 bg-slate-50 p-4 rounded-xl border border-slate-100"><span class="block text-xl font-black text-slate-900" id="modalReadiness"></span><span class="text-[10px] text-slate-400 font-bold uppercase">TRL</span></div></div></div>
+            </div>
+            <div class="lg:w-[400px] bg-slate-50 border-l border-slate-200 p-8 lg:p-12 flex flex-col justify-center items-center text-center">
+                <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 mb-8"><div id="qrcode" class="opacity-90"></div></div>
+                <p id="modalUrl" class="text-[10px] font-mono text-slate-400 break-all mb-8 max-w-[250px]"></p>
+                <a id="modalLink" href="#" target="_blank" class="w-full bg-slate-900 text-white font-bold text-xs uppercase tracking-widest py-4 rounded-xl hover:bg-aero-DEFAULT transition-all shadow-lg">Acessar Fonte</a>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
