@@ -121,7 +121,7 @@
                 <div class="flex justify-between items-start mb-6">
                     <div>
                         <h3 class="text-sm font-black text-slate-800 uppercase tracking-wide">Densidade Temporal</h3>
-                        <p class="text-[10px] text-slate-400 font-bold uppercase">Volume de eventos (Jan 2026)</p>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase">Volume de eventos </p>
                     </div>
                     <span class="px-3 py-1 bg-slate-50 rounded-lg text-[10px] font-black text-slate-400">TIMELINE</span>
                 </div>
@@ -304,16 +304,13 @@
                 
                 const prompt = `
                     Atue como um analista de inteligência sênior em Aeroespacial e Defesa.
-                    Busque novas notícias REAIS e VERIFICÁVEIS de JANEIRO DE 2026.
+                    Busque novas notícias REAIS e VERIFICÁVEIS do Mês Atual DE 2026.
                     NÃO repita estas notícias: ${knownTitles}.
                     
                     REQUISITO CRÍTICO DE FORMATO:
                     Para cada notícia, gere um JSON com:
                     title, sector (aero/defense), scope (national/international), date (DD/MM/2026), 
                     source, url, summary, 
-                    p1 (Contexto - parágrafo longo de 60-80 palavras), 
-                    p2 (Detalhes Técnicos - parágrafo longo de 60-80 palavras), 
-                    p3 (Impacto Estratégico - parágrafo longo de 60-80 palavras),
                     impact (1-10), readiness (1-10).
                     
                     Retorne APENAS o JSON array. Sem markdown, sem introdução.
